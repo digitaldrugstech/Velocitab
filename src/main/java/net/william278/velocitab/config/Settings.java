@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import net.william278.velocitab.Velocitab;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -95,6 +96,12 @@ public class Settings implements ConfigValidator {
 
     @Comment("Whether to enable the Plugin Message API (allows backend plugins to perform certain operations)")
     private boolean enablePluginMessageApi = true;
+
+    @Comment("Whether to replace the string with a translation from the resource package")
+    private boolean enableStringReplace = true;
+
+    @Comment("Strings to be replaced")
+    private List<String> stringsReplaced = List.of("&aprdx.so");
 
     /**
      * Get display name for the server

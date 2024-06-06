@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.william278.velocitab.Velocitab;
 import net.william278.velocitab.config.Group;
 import net.william278.velocitab.config.Placeholder;
@@ -31,6 +32,7 @@ import net.william278.velocitab.packet.UpdateTeamsPacket;
 import net.william278.velocitab.tab.Nametag;
 import net.william278.velocitab.tab.PlayerTabList;
 import org.apache.commons.lang3.ObjectUtils;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,21 +141,37 @@ public final class TabPlayer implements Comparable<TabPlayer> {
     public CompletableFuture<Void> sendHeaderAndFooter(@NotNull PlayerTabList tabList) {
         return tabList.getHeader(this).thenCompose(header -> tabList.getFooter(this).thenAccept(footer -> {
             final boolean disabled = plugin.getSettings().isDisableHeaderFooterIfEmpty();
+            Component newHeader = translateComponent(header);
+            Component newFooter = translateComponent(footer);
             if (disabled) {
-                if (!Component.empty().equals(header)) {
-                    lastHeader = header;
-                    player.sendPlayerListHeader(header);
+                if (!Component.empty().equals(newHeader)) {
+                    lastHeader = newHeader;
+                    player.sendPlayerListHeader(newHeader);
                 }
-                if (!Component.empty().equals(footer)) {
-                    lastFooter = footer;
-                    player.sendPlayerListFooter(footer);
+                if (!Component.empty().equals(newFooter)) {
+                    lastFooter = newFooter;
+                    player.sendPlayerListFooter(newFooter);
                 }
             } else {
                 lastHeader = header;
                 lastFooter = footer;
-                player.sendPlayerListHeaderAndFooter(header, footer);
+                player.sendPlayerListHeaderAndFooter(newHeader, newFooter);
             }
         }));
+    }
+
+    public Component translateComponent(Component component) {
+        if (plugin.getSettings().isEnableStringReplace()) {
+            for (@RegExp String word : plugin.getSettings().getStringsReplaced()) {
+                TextReplacementConfig textReplacementConfig = TextReplacementConfig
+                        .builder()
+                        .match(word)
+                        .replacement(Component.translatable(word))
+                        .build();
+                component = component.replaceText(textReplacementConfig);
+            }
+        }
+        return component;
     }
 
     public void incrementIndexes() {
