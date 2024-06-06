@@ -57,7 +57,8 @@ public class TabGroups implements ConfigValidator {
             false,
             1000,
             1000,
-            false
+            false,
+            true
     );
 
     public List<Group> groups = List.of(DEFAULT_GROUP);
@@ -160,7 +161,8 @@ public class TabGroups implements ConfigValidator {
                     group.collisions(),
                     group.headerFooterUpdateRate(),
                     group.placeholderUpdateRate(),
-                    group.onlyListPlayersInSameServer()
+                    group.onlyListPlayersInSameServer(),
+                    group.enablePapiHook()
             );
 
             groups.add(group);

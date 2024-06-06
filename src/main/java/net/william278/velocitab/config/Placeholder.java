@@ -136,6 +136,10 @@ public enum Placeholder {
         }
 
         return plugin.getPAPIProxyBridgeHook()
+                .map(hook -> {
+                    if (!player.getGroup().enablePapiHook()) return null;
+                    else return hook;
+                })
                 .map(hook -> hook.formatPlaceholders(replaced, player.getPlayer())
                         .exceptionally(e -> {
                             plugin.log(Level.ERROR, "An error occurred whilst parsing placeholders: " + e.getMessage());

@@ -49,7 +49,8 @@ public record Group(
         boolean collisions,
         int headerFooterUpdateRate,
         int placeholderUpdateRate,
-        boolean onlyListPlayersInSameServer
+        boolean onlyListPlayersInSameServer,
+        boolean enablePapiHook
 ) {
 
     @NotNull
