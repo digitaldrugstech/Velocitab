@@ -28,7 +28,7 @@ test: ## Run tests
 
 .PHONY: fmt
 fmt: ## Format code and apply license headers
-	./gradlew licenseFormat
+	./gradlew licenseFormat || echo "licenseFormat not available (requires JDK)"
 
 ## ── Publishing ──────────────────────────────────────────────────────
 
